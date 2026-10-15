@@ -5,6 +5,7 @@
 
 #include "uORB.h"
 #include "Imu.h"
+#include "CommandParser.h"
 
 #include "stm32f1xx_hal.h"
 
@@ -195,7 +196,8 @@ static void MAVLinkStreamerTask(void *args)
                 if ((now - g_mavlink_streams[i].last_sent_ms) >= (1000 / g_mavlink_streams[i].rate_hz))
                 {
                     g_mavlink_streams[i].last_sent_ms = now;
-                    g_mavlink_streams[i].send(); // Gọi hàm phát tương ứng
+                    // Todo: Disable for motor testing, will enable later
+                    // g_mavlink_streams[i].send(); // Gọi hàm phát tương ứng
                 }
             }
         }
@@ -241,11 +243,20 @@ void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size)
     {
         for (uint16_t i = 0; i < Size; i++)
         {
-            if (mavlink_parse_char(MAVLINK_COMM_0, rx_dma_buffer[i], &rx_msg, &rx_status))
+            uint8_t byte = rx_dma_buffer[i];
+
+            /* ── MAVLink parser ───────────────────────────────────────────
+             * Tự nhận dạng frame 0xFD (v2) / 0xFE (v1).
+             * Byte ASCII bình thường sẽ bị bỏ qua ở đây.               */
+            if (mavlink_parse_char(MAVLINK_COMM_0, byte, &rx_msg, &rx_status))
             {
-                // Parse thành công 1 message MAVLink
                 xQueueSendFromISR(xMavlinkRxQueue, &rx_msg, NULL);
             }
+
+            /* ── ASCII Command parser ─────────────────────────────────────
+             * Feed song song — parser tự tích lũy line buffer và thực
+             * thi khi gặp '\n'. Không ảnh hưởng đến MAVLink.            */
+            CommandParser_FeedByte(byte);
         }
 
         // Bật lại DMA chờ khung truyền tiếp theo từ QGC
