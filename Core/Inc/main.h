@@ -71,12 +71,6 @@ void Error_Handler(void);
 #define IN3_GPIO_Port GPIOA
 #define IN4_Pin GPIO_PIN_5
 #define IN4_GPIO_Port GPIOA
-#define NFR24_EXT_Pin GPIO_PIN_15
-#define NFR24_EXT_GPIO_Port GPIOA
-#define NFR24_CSN_Pin GPIO_PIN_6
-#define NFR24_CSN_GPIO_Port GPIOB
-#define NFR24_CE_Pin GPIO_PIN_7
-#define NFR24_CE_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
 

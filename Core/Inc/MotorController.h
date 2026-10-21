@@ -25,9 +25,9 @@ typedef enum
  * Giá trị hợp lệ để motor thực sự chạy: [MOTOR_DEAD_ZONE, MAX_MOTOR_SPEED]
  * Mọi speed != 0 sẽ được clamp vào vùng này tự động trong SetMotorSpeed().
  */
-#define MOTOR_DEAD_ZONE 750u /* PWM tối thiểu để motor quay được       */
+#define MOTOR_DEAD_ZONE 500u /* PWM tối thiểu để motor quay được       */
 
-#define KICKSTART_DURATION_MS 80u /* Thời gian kích xung max khi khởi động  */
+#define KICKSTART_DURATION_MS 100u /* Thời gian kích xung max khi khởi động  */
 
 void MotorController_Init(void);
 
