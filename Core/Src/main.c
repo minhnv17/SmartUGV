@@ -118,9 +118,11 @@ int main(void)
   MX_TIM2_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-  Imu_Init();
-  MavlinkStreamer_Init();
   MotorController_Init();
+  if (Imu_Init() != 0 || MavlinkStreamer_Init() != 0) {
+    MotorController_StopAllMotors();
+    Error_Handler();
+  }
 
   /* Kickstart tự động: task sẽ kích MAX 80ms rồi hạ về 700 */
   // MotorController_SetMotorSpeed(MOTOR_1, 750, FORWARD);

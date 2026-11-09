@@ -17,7 +17,7 @@ BAUD_RATE = 115200
 def main():
     print(f"Đang kết nối tới SmartUGV qua {SERIAL_PORT} @ {BAUD_RATE} baud...")
     try:
-        master = mavutil.mavlink_connection(SERIAL_PORT, baud=BAUD_RATE)
+        master = mavutil.mavlink_connection(SERIAL_PORT, baud=BAUD_RATE, source_system=1, source_component=191)
     except Exception as e:
         print(f"Lỗi kết nối cổng Serial: {e}")
         sys.exit(1)
@@ -65,7 +65,7 @@ def main():
     def arm():
         print("Gửi lệnh ARM xe...")
         master.mav.command_long_send(
-            1, 200,
+            1, 1,
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             1, 0, 0, 0, 0, 0, 0
@@ -75,7 +75,7 @@ def main():
     def disarm():
         print("Gửi lệnh DISARM xe...")
         master.mav.command_long_send(
-            1, 200,
+            1, 1,
             mavutil.mavlink.MAV_CMD_COMPONENT_ARM_DISARM,
             0,
             0, 0, 0, 0, 0, 0, 0
